@@ -1,5 +1,6 @@
 import configparser
 from imaplib import IMAP4
+import ssl
 
 from sqlalchemy import create_engine
 
@@ -18,13 +19,15 @@ def init_database():
 
 
 def get_gpx_files_from_mail():
+    mail.starttls(ssl.create_default_context())
     mail.login(config['mail']['username'], config['mail']['password'])
 
     mail.logout()
 
 
 def main():
-    pass
+    init_database()
+    get_gpx_files_from_mail()
 
 
 if __name__ == '__main__':
