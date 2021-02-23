@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 
 
 config = configparser.ConfigParser().read('config.ini')
-db = create_engine(f"postgresql://{config['db'][1]}:{config['db'][2]}@{config['db'][0]}/{config['db'][3]}")
+db = create_engine(f"postgresql://{config['db'][1]}:{config['db'][2]}@{config['db'][0]}/{config['db'][3]}").connect()
 mail = IMAP4(host=config['mail'][0])
 
 
