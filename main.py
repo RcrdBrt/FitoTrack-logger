@@ -7,9 +7,9 @@ from sqlalchemy import create_engine
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-db = create_engine(f"postgresql://{config['db'][1]}:{config['db'][2]}@{config['db'][0]}/{config['db'][3]}").connect()
+db = create_engine(f"postgresql://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['database']}").connect()
 
-mail = IMAP4(host=config['mail'][0])
+mail = IMAP4(host=config['mail']['host'])
 
 
 def init_database():
@@ -18,7 +18,7 @@ def init_database():
 
 
 def get_gpx_files_from_mail():
-    mail.login(config['mail'][1], config['mail'][2])
+    mail.login(config['mail']['username'], config['mail']['password'])
 
     mail.logout()
 
