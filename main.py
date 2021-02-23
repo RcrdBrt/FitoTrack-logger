@@ -9,6 +9,12 @@ db = create_engine(f"postgresql://{config['db'][1]}:{config['db'][2]}@{config['d
 mail = IMAP4(host=config['mail'][0])
 
 
+
+def init_database():
+    with open('init.sql') as f:
+        db.execute('\n'.join(f.readlines()))
+
+
 def get_gpx_files_from_mail():
     mail.login(config['mail'][1], config['mail'][2])
 
