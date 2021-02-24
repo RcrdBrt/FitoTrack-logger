@@ -38,10 +38,6 @@ def _get_sender(msg: Message) -> str:
 
 
 def get_gpx_files_from_mail():
-    try:
-        os.mkdir('gpx_files')
-    except FileExistsError:
-        pass
     mail.starttls(ssl.create_default_context())
     mail.login(config['mail']['username'], config['mail']['password'])
 
@@ -111,6 +107,10 @@ def process_gpx_files(tx: Connection):
 
 
 def main():
+    try:
+        os.mkdir('gpx_files')
+    except FileExistsError:
+        pass
     init_database()
     get_gpx_files_from_mail()
     db.transaction(process_gpx_files)
