@@ -6,6 +6,8 @@ create table if not exists training(
     description text not null,
     moving_time float not null,
     stopped_time float not null,
+    moving_distance float not null,
+    stopped_distance float not null,
     data jsonb not null default '{}'
 );
 
