@@ -2,7 +2,7 @@ create table if not exists training(
     id uuid primary key default gen_random_uuid(),
     filename text not null,
     medium varchar(255) not null,
-    comment text not null,
+    description text not null,
     data jsonb not null default '{}'
 );
 
