@@ -18,7 +18,7 @@ config.read('config.ini')
 db = create_engine(f"postgresql://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['database']}").connect()
 
 mail = IMAP4(host=config['mail']['host'])
-fitotrack_msg_filter = '(OR SUBJECT "fitotrack" SUBJECT "Fitotrack" SUBJECT "FITOTRACK")'
+fitotrack_msg_filter = '(OR SUBJECT "fitotrack" SUBJECT "Fitotrack" SUBJECT "FITOTRACK" SUBJECT "FitoTrack")'
 
 
 def init_database():
