@@ -20,4 +20,4 @@ create table if not exists training_data(
     constraint fk_training_id foreign key(training_id) references training(id) on delete cascade
 );
 create index if not exists idx_training_data_training_id on training_data(training_id);
-create index if not exists idx_training_data_geog on training_data(geog) using GIST(geog);
+create index if not exists idx_training_data_geog on training_data using GIST(geog);
