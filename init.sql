@@ -4,6 +4,8 @@ create table if not exists training(
     filename text not null,
     medium varchar(255) not null,
     description text not null,
+    moving_time float not null,
+    stopped_time float not null,
     data jsonb not null default '{}'
 );
 
