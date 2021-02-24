@@ -42,13 +42,14 @@ def get_gpx_files_from_mail():
     for i in ids:
         _, fetched = mail.fetch(i, '(RFC822)')
         email_message = email.message_from_bytes(fetched[0][1])
+        sender = email_message.get('from')
         for part in email_message.walk():
             if part.get_content_maintype() == 'multipart' or part.get_content_disposition() is None:
                 continue
             filename = part.get_filename()
 
             if filename and not os.path.exists(f'gpx_files/{filename}'):
-                with open(os.path.join('gpx_files', filename), 'wb') as f:
+                with open(os.path.join('gpx_files', f'{sender}_{filename}'), 'wb') as f:
                     f.write(part.get_payload(decode=True))
         mail.store(i, '+FLAGS', '\\Deleted')
     
