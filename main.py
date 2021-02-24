@@ -4,6 +4,7 @@ import ssl
 import email
 import os
 from glob import glob
+from email.message import Message
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Connection
@@ -25,6 +26,17 @@ def init_database():
         db.execute('\n'.join(f.readlines()))
 
 
+def _get_sender(msg: Message) -> str:
+    sender: str = msg.get('from')
+    if ' ' in sender:
+        sender = sender.split(' ')
+        for field in sender:
+            if '@' in field and '<' in field and '>' in field:
+                return field[1:-1]
+
+    return sender
+
+
 def get_gpx_files_from_mail():
     try:
         os.mkdir('gpx_files')
@@ -40,15 +52,18 @@ def get_gpx_files_from_mail():
     for i in ids:
         _, fetched = mail.fetch(i, '(RFC822)')
         email_message = email.message_from_bytes(fetched[0][1])
-        sender = email_message.get('from')
+        sender = _get_sender(email_message)
         for part in email_message.walk():
             if part.get_content_maintype() == 'multipart' or part.get_content_disposition() is None:
                 continue
             filename = part.get_filename()
 
-            if filename and not os.path.exists(f'gpx_files/{filename}'):
-                with open(os.path.join('gpx_files', f'{sender}_{filename}'), 'wb') as f:
-                    f.write(part.get_payload(decode=True))
+            if filename:
+                filename = f'{sender}_{filename}'
+                if not os.path.exists(f'gpx_files/{filename}'):
+                    with open(f'gpx_files/{filename}', 'wb') as f:
+                        f.write(part.get_payload(decode=True))
+
         mail.store(i, '+FLAGS', '\\Deleted')
     
     mail.expunge()
