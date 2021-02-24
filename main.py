@@ -74,7 +74,20 @@ def process_gpx_files(tx: Connection, owner: str):
                 gpx_file.get_moving_data().moving_distance,
                 gpx_file.get_moving_data().stopped_distance,)
             ))[0][0]
-
+            for track in gpx_file.tracks:
+                for segment in track.segments:
+                    for point in segment.points:
+                        db.execute("""
+                            insert into training_data (training_id, t, lat, lon, speed, elevation)
+                                values (?, ?, ?, ?, ?, ?)
+                            """,
+                            (training_id,
+                            point.time,
+                            point.latitude,
+                            point.longitude,
+                            point.speed,
+                            point.elevation,)
+                        )
 
 
 def main(owner: str):
