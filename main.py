@@ -4,8 +4,6 @@ import ssl
 import email
 import os
 from glob import glob
-import sys
-from gpxpy import gpx
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Connection
@@ -106,7 +104,5 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except IndexError:
-        print('Run the script with "python main.py OWNER_NAME"')
     except (KeyboardInterrupt, EOFError):
         pass
