@@ -58,6 +58,7 @@ def get_gpx_files_from_mail():
                 filename = f'{sender}_{filename}'
                 if not os.path.exists(f'gpx_files/{filename}'):
                     with open(f'gpx_files/{filename}', 'wb') as f:
+                        print(f'creating {filename}')
                         f.write(part.get_payload(decode=True))
 
         mail.store(i, '+FLAGS', '\\Deleted')
@@ -71,6 +72,7 @@ def process_gpx_files(tx: Connection):
     for filepath in glob('gpx_files/*.gpx'):
         owner = os.path.split(filepath)[-1].split('_workout-')[0]
         filename = f'workout-{os.path.split(filepath)[-1].split("_workout-")[1]}'
+        print(f'Processing {filename}')
         if list(db.execute(text('select exists(select from training where owner = :owner and filename = :filename)'),
                 dict(owner=owner, filename=filename,),),)[0][0]:
             continue
