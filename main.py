@@ -19,7 +19,7 @@ config.read('config.ini')
 db = create_engine(f"postgresql://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['database']}").connect()
 
 mail = IMAP4(host=config['mail']['host'])
-fitotrack_msg_filter = '(ALL)'
+fitotrack_msg_filter = 'ALL'
 
 
 def init_database():
