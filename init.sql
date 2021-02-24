@@ -1,5 +1,6 @@
 create table if not exists training(
     id uuid primary key default gen_random_uuid(),
+    owner varchar(255) not null,
     filename text not null,
     medium varchar(255) not null,
     description text not null,
