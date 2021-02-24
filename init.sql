@@ -17,7 +17,7 @@ create table if not exists training_data(
     lat float not null,
     lon float not null,
     speed float not null,
-    altitude float not null,
+    elevation float not null,
     distance float not null,
     kcal int not null,
     constraint fk_training_id foreign key(training_id) references training(id) on delete cascade
