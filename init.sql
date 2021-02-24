@@ -14,8 +14,7 @@ create table if not exists training(
 create table if not exists training_data(
     training_id uuid not null,
     t timestamp with time zone not null,
-    lat float not null,
-    lon float not null,
+    geog GEOGRAPHY(Point), -- perf issues but don't care enough for geometry->projection->geography conversions
     speed float not null,
     elevation float not null,
     constraint fk_training_id foreign key(training_id) references training(id) on delete cascade
