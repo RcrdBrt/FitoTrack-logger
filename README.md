@@ -31,7 +31,7 @@ In order for it to have a more "graceful" functionality and play nice with other
 You need a PostgreSQL database. Make sure to enable the famous PostGIS extension. [Here is the extension website](http://postgis.net) and the documentation on how to do that.
 
 Once inside the project's directory, create a configuration file called `config.ini`.
-This is a template with the required sections and fileds it needs (adjust as required):
+This is a template with the required sections and fields it needs (adjust as required):
 ```
 [mail]
 host=MAIL-HOST
