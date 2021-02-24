@@ -10,6 +10,7 @@ from gpxpy import gpx
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Connection
 import gpxpy
+from bs4 import BeautifulSoup
 
 
 config = configparser.ConfigParser()
@@ -18,7 +19,7 @@ config.read('config.ini')
 db = create_engine(f"postgresql://{config['db']['username']}:{config['db']['password']}@{config['db']['host']}/{config['db']['database']}").connect()
 
 mail = IMAP4(host=config['mail']['host'])
-fitotrack_msg_filter = '(OR SUBJECT "fitotrack" SUBJECT "Fitotrack" SUBJECT "FITOTRACK" SUBJECT "FitoTrack")'
+fitotrack_msg_filter = '(ALL)'
 
 
 def init_database():
@@ -49,7 +50,9 @@ def get_gpx_files_from_mail():
             if filename and not os.path.exists(f'gpx_files/{filename}'):
                 with open(os.path.join('gpx_files', filename), 'wb') as f:
                     f.write(part.get_payload(decode=True))
+        mail.store(i, '+FLAGS', '\\Deleted')
     
+    mail.expunge()
     mail.logout()
 
 
