@@ -58,10 +58,12 @@ def get_gpx_files_from_mail():
     mail.logout()
 
 
-def process_gpx_files(tx: Connection, owner: str):
+def process_gpx_files(tx: Connection):
     for filepath in glob('gpx_files/*.gpx'):
-        filename = os.path.split(filepath)[-1]
-        if list(db.execute(text('select exists(select from training where filename = :filename)'), dict(filename=filename)))[0][0]:
+        owner = os.path.split(filepath)[-1].split('_workout-')[0]
+        filename = f'workout-{os.path.split(filepath)[-1].split("_workout-")[1]}'
+        if list(db.execute(text('select exists(select from training where owner = :owner and filename = :filename)'),
+                dict(owner=owner, filename=filename,),),)[0][0]:
             continue
         with open(filepath) as f:
             gpx_file = gpxpy.parse(f)
@@ -95,15 +97,15 @@ def process_gpx_files(tx: Connection, owner: str):
                             elevation=point.elevation,),)
 
 
-def main(owner: str):
+def main():
     init_database()
     get_gpx_files_from_mail()
-    db.transaction(process_gpx_files, owner)
+    db.transaction(process_gpx_files)
 
 
 if __name__ == '__main__':
     try:
-        main(sys.argv[1])
+        main()
     except IndexError:
         print('Run the script with "python main.py OWNER_NAME"')
     except (KeyboardInterrupt, EOFError):
