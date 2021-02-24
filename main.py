@@ -53,6 +53,7 @@ def get_gpx_files_from_mail():
         mail.store(i, '+FLAGS', '\\Deleted')
     
     mail.expunge()
+    mail.close()
     mail.logout()
 
 
