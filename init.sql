@@ -18,8 +18,6 @@ create table if not exists training_data(
     lon float not null,
     speed float not null,
     elevation float not null,
-    distance float not null,
-    kcal int not null,
     constraint fk_training_id foreign key(training_id) references training(id) on delete cascade
 );
 create index if not exists idx_training_data_training_id on training_data(training_id);
