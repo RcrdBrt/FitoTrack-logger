@@ -1,3 +1,4 @@
 sqlalchemy
 gpxpy
 psycopg2
+bs4
