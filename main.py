@@ -41,7 +41,6 @@ def get_gpx_files_from_mail():
     mail.starttls(ssl.create_default_context())
     mail.login(config['mail']['username'], config['mail']['password'])
 
-    mail.create(config['mail']['mailbox_dir'])
     mail.select()
     _, ids = mail.search(None, fitotrack_msg_filter)
     ids = ids[0].split()
