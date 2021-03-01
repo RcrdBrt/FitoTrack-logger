@@ -11,6 +11,8 @@ from sqlalchemy.engine import Connection
 import gpxpy
 from bs4 import BeautifulSoup
 
+from stats import print_stats
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -117,6 +119,7 @@ def main():
     init_database()
     get_gpx_files_from_mail()
     db.transaction(process_gpx_files)
+    print_stats(db)
 
 
 if __name__ == '__main__':
