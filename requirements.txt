@@ -3,3 +3,4 @@ gpxpy
 psycopg2
 bs4
 sqlparse
+tabulate
