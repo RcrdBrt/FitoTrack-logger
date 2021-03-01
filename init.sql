@@ -19,4 +19,5 @@ create table if not exists training_data(
     elevation float not null,
     constraint fk_training_id foreign key(training_id) references training(id) on delete cascade
 );
+create index if not exists idx_training_data_t on training_data(t);
 create index if not exists idx_training_data_geog on training_data using GIST(geog);
