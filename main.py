@@ -105,6 +105,7 @@ def process_gpx_files(tx: Connection):
                             geog=f'POINT({point.latitude} {point.longitude})',
                             speed=point.speed,
                             elevation=point.elevation,),)
+        os.remove(filepath)
 
 
 def main():
