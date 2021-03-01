@@ -74,6 +74,7 @@ def process_gpx_files(tx: Connection):
         print(f'Processing {filename}')
         if list(db.execute(text('select exists(select from training where owner = :owner and filename = :filename)'),
                 dict(owner=owner, filename=filename,),),)[0][0]:
+            os.remove(filepath)
             continue
         with open(filepath) as f:
             gpx_file = gpxpy.parse(f)
