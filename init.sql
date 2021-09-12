@@ -33,7 +33,7 @@ begin
 			return 'Boara';
 		when st_dwithin($1, st_point(45.610874, 9.522227), 2000) then
 			return 'Trezzo sull` Adda';
-		when st_dwithin($1, st_point(45.645741, 9.265780), 1000) then
+		when st_dwithin($1, st_point(45.645741, 9.265780), 2000) then
 			return 'Sovico';
 		when st_dwithin($1, st_point(45.588173, 9.275549), 3000) then
 			return 'Monza';
