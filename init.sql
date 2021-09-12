@@ -23,6 +23,7 @@ create index if not exists idx_training_data_t on training_data(t);
 create index if not exists idx_training_data_training_id on training_data(training_id);
 create index if not exists idx_training_data_geog on training_data using GIST(geog);
 
+-- poor man's reverse geocoding
 create or replace function resolve_geo_location(geography) returns text as $$
 begin 
 	case when st_dwithin($1, st_point(45.516114, 9.216108), 1000) then
