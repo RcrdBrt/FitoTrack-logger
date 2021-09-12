@@ -25,8 +25,18 @@ create index if not exists idx_training_data_geog on training_data using GIST(ge
 
 create or replace function resolve_geo_location(geography) returns text as $$
 begin 
-	case when st_dwithin($1, st_point(45.516114, 9.216108), 500) then
+	case when st_dwithin($1, st_point(45.516114, 9.216108), 1000) then
 			return 'Bicocca';
+		when st_dwithin($1, st_point(45.058302, 11.644477), 2000) then
+			return 'Villanova';
+		when st_dwithin($1, st_point(45.106055, 11.794563), 2000) then
+			return 'Boara';
+		when st_dwithin($1, st_point(45.610874, 9.522227), 2000) then
+			return 'Trezzo sull` Adda';
+		when st_dwithin($1, st_point(45.645741, 9.265780), 1000) then
+			return 'Sovico';
+		when st_dwithin($1, st_point(45.588173, 9.275549), 3000) then
+			return 'Monza';
 	else
 		return 'unknown';
 	end case;
@@ -61,8 +71,8 @@ order by td_start.t asc
 create or replace view training_info as
 (select distinct
         td.t::date,
-        date_trunc('second', training_duration.start_time::time) as start_time,
-        date_trunc('second', training_duration.end_time::time) as end_time,
+        training_duration.start_time as start_time,
+        training_duration.end_time as end_time,
         training_duration.duration as duration,
         round(((t.moving_distance)/1000)::numeric, 2) as distance,
         round(( (t.moving_distance / 1000) / (select extract(epoch from training_duration.duration)/3600))::numeric, 1) as pace_kmh
