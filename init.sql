@@ -24,30 +24,28 @@ create index if not exists idx_training_data_training_id on training_data(traini
 create index if not exists idx_training_data_geog on training_data using GIST(geog);
 
 create or replace view training_duration as
-(select td_start.id as id,
-	td_start.geog as start_location,
-	td_end.geog as end_location,
-	td_start.t as start_time,
-	td_end.t as end_time,
-	date_trunc('second', (td_end.t - td_start.t)) as duration
-from (select td_row_n.t, td_row_n.id, td_row_n.geog
-		from (select *,
-				row_number() over (partition by td.training_id order by td.t asc) as row_n
-			from training_data td join training t on (t.id = td.training_id)
-		order by td.t asc) as td_row_n
-	where td_row_n.row_n = 1
-	order by td_row_n.t asc) td_start
-	
-	join
-	
-	(select td_row_n.t, td_row_n.id, td_row_n.geog
-		from (select *,
-				row_number() over (partition by td.training_id order by td.t desc) as row_n
-			from training_data td join training t on (t.id = td.training_id)
-		order by td.t asc) as td_row_n
-	where td_row_n.row_n = 1) td_end
-
-	on (td_start.id = td_end.id)
+(
+select
+        td_start.training_id as training_id,
+        td_start.t as start_time,
+        td_end.t as end_time,
+        resolve_geo_location(td_start.geog) AS start_location,
+        resolve_geo_location(td_end.geog) AS end_location,
+        td_start.geog as start_location_point,
+        td_end.geog as end_location_point,
+        date_trunc('second'::text, td_end.t - td_start.t) AS duration
+    from
+    (
+        select distinct on (td2.training_id) *
+                from training_data td2 order by td2.training_id, t asc
+    ) td_start
+    join
+    (
+        select distinct on (td2.training_id) *
+                from training_data td2 order by td2.training_id, t desc
+    ) td_end
+    on (td_start.training_id = td_end.training_id)
+order by td_start.t asc
 );
 
 create or replace view training_info as
