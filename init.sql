@@ -69,3 +69,59 @@ select
     join training t on (t.id = td_start.training_id)
 order by td_start.t asc
 );
+
+---------------------------------------------
+-- trovare allenamenti usando georeference --
+---------------------------------------------
+-- COSTANTI
+-- via mirabello (dentro al parco): st_point(45.607115, 9.283687)
+-- rotatoria Tamoil (per la via del nord): st_point(45.622779, 9.276274)
+
+-- giro del parco di monza
+create or replace view parco_monza_classico as
+(
+    select duration,
+            distance,
+            pace_kmh,
+            start_time,
+            end_time,
+            start_location,
+            end_location,
+            training_id
+        from training_info ti
+    where ti.training_id in (
+        -- trovo id allenamenti che passano sicuramente per il parco di monza
+        select distinct t.id
+            from training t
+                join training_data td on (t.id = td.training_id)
+                join training_data td2 using (training_id)
+        where
+            distance < 31 and
+            st_dwithin(td.geog, st_point(45.607115, 9.283687), 20) -- se passo a 20 metri da via mirabello dentro al parco
+            and not st_dwithin(td2.geog, st_point(45.622779, 9.276274), 20) -- e se non passo dal tamoil
+    )
+);
+
+-- giro di arcore
+create or replace view arcore as
+(
+    select duration,
+            distance,
+            pace_kmh,
+            start_time,
+            end_time,
+            start_location,
+            end_location,
+            training_id
+        from training_info ti
+    where ti.training_id in (
+        -- trovo id allenamenti che passano sicuramente per il parco di monza
+        select td.training_id
+        from training_data td join training_data td2 using (training_id)
+        where
+            distance < 42 and
+            end_location = 'Bicocca' and
+            st_dwithin(td.geog, st_point(45.622779, 9.276274), 20) -- se passo a 20 metri dal Tamoil
+            and st_dwithin(td2.geog, st_point(45.631299, 9.308985), 30) -- e se passo a 30 metri dalla rotatoria per arcore
+    )
+);
