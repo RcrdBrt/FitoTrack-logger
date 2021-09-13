@@ -115,7 +115,6 @@ create or replace view arcore as
             training_id
         from training_info ti
     where ti.training_id in (
-        -- trovo id allenamenti che passano sicuramente per il parco di monza
         select td.training_id
         from training_data td join training_data td2 using (training_id)
         where
