@@ -124,3 +124,26 @@ create or replace view arcore as
             and st_dwithin(td2.geog, st_point(45.631299, 9.308985), 30) -- e se passo a 30 metri dalla rotatoria per arcore
     )
 );
+
+create or replace view monticello as
+(
+    select duration,
+            distance,
+            pace_kmh,
+            start_time,
+            end_time,
+            start_location,
+            end_location,
+            training_id
+        from training_info ti
+    where ti.training_id in (
+        select td.training_id
+        from training_data td join training_data td2 on (td.training_id = td2.training_id) join training_data td3 on (td.training_id = td3.training_id)
+        where
+            distance < 61 and
+            end_location = 'Bicocca' and
+            st_dwithin(td.geog, st_point(45.622779, 9.276274), 20) -- se passo per il Tamoil
+            and st_dwithin(td2.geog, st_point(45.631299, 9.308985), 30) -- e se passo a 30 metri dalla rotatoria per arcore
+            and st_dwithin(td3.geog, st_point(45.705275, 9.305889), 20) -- e se passo a 20 metri dalla fontanella di Monticello
+    )
+);
