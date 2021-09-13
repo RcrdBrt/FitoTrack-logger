@@ -91,10 +91,9 @@ create or replace view parco_monza_classico as
         from training_info ti
     where ti.training_id in (
         -- trovo id allenamenti che passano sicuramente per il parco di monza
-        select distinct t.id
-            from training t
-                join training_data td on (t.id = td.training_id)
-                join training_data td2 using (training_id)
+        select td.training_id
+            from training_data td on (t.id = td.training_id)
+                join training_data td2 on (t.id = td2.training_id)
         where
             distance < 31 and
             st_dwithin(td.geog, st_point(45.607115, 9.283687), 20) -- se passo a 20 metri da via mirabello dentro al parco
